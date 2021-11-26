@@ -1,9 +1,12 @@
 HELP.md
 target/
-!.mvn/wrapper/maven-wrapper.jar
+*/target/**
+*.mvn
+*lib
 !**/src/main/**/target/
 !**/src/test/**/target/
-
+mvnw
+mvnw.cmd
 ### STS ###
 .apt_generated
 .classpath
@@ -31,3 +34,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/.mvn/
+/lib/

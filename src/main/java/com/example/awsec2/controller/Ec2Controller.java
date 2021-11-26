@@ -9,11 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +20,8 @@ public class Ec2Controller {
 
     @PostMapping("/create/{imageId}")
     public ResponseEntity<String> createInstanceUsingImage(@PathVariable("imageId") String id) {
-        return ResponseEntity.ok(ec2Service.createInstanceUsingImage(id));
+        return ec2Service.createInstanceUsingImage(id)
+                .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
     @GetMapping("/stop/{id}")
@@ -37,13 +34,5 @@ public class Ec2Controller {
         return ResponseEntity.ok(ec2Service.startInstance(id));
     }
 
-    @PostMapping(value = "/upload",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) {
-        try {
-            ec2Service.uploadFile(file);
-            return ResponseEntity.ok("File has been uploaded");
-        } catch (IOException e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+
 }

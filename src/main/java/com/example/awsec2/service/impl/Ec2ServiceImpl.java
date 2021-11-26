@@ -3,36 +3,27 @@ package com.example.awsec2.service.impl;
 import com.amazonaws.services.ec2.AmazonEC2;
 import com.amazonaws.services.ec2.model.*;
 import com.example.awsec2.service.Ec2Service;
-import com.example.awsec2.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class Ec2ServiceImpl implements Ec2Service {
 
     private final AmazonEC2 amazonEC2;
-    private final S3Service s3Service;
 
     @Override
-    public String createInstanceUsingImage(String imageId) {
-        RunInstancesRequest request = new RunInstancesRequest()
-                .withImageId(imageId)
-                .withInstanceType(InstanceType.T2Micro)
-                .withMaxCount(1)
-                .withMinCount(1);
-        return amazonEC2.runInstances(request)
+    public Optional<String> createInstanceUsingImage(String imageId) {
+        List<Instance> instances = amazonEC2.runInstances(buildRequest(imageId))
                 .getReservation()
-                .getInstances()
-                .get(0)
-                .getInstanceId();
+                .getInstances();
+        if (instances.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(instances.get(0).getInstanceId());
     }
 
     @Override
@@ -49,14 +40,11 @@ public class Ec2ServiceImpl implements Ec2Service {
         );
     }
 
-    @Override
-    public void uploadFile(MultipartFile file) throws IOException {
-        File temp = new File("src/main/resources/Geometry.jar");
-        try(OutputStream outputStream = new FileOutputStream(temp)){
-            outputStream.write(file.getBytes());
-            s3Service.uploadFile(temp);
-        }finally {
-            temp.delete();
-        }
+    private RunInstancesRequest buildRequest(String imageId) {
+        return new RunInstancesRequest()
+                .withImageId(imageId)
+                .withInstanceType(InstanceType.T2Micro)
+                .withMaxCount(1)
+                .withMinCount(1);
     }
 }
