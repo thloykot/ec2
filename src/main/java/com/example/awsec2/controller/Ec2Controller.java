@@ -24,12 +24,12 @@ public class Ec2Controller {
                 .map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
-    @GetMapping("/stop/{id}")
+    @PostMapping("/stop/{id}")
     public ResponseEntity<StopInstancesResult> stopInstance(@PathVariable("id") String id) {
         return ResponseEntity.ok(ec2Service.stopInstance(id));
     }
 
-    @GetMapping("/start/{id}")
+    @PostMapping("/start/{id}")
     public ResponseEntity<StartInstancesResult> startInstance(@PathVariable("id") String id) {
         return ResponseEntity.ok(ec2Service.startInstance(id));
     }
