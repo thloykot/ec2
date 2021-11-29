@@ -14,6 +14,7 @@
     <name>aws-ec2</name>
     <description>aws-ec2</description>
     <properties>
+        <awsVersion>1.12.119</awsVersion>
         <java.version>11</java.version>
     </properties>
     <dependencies>
@@ -30,12 +31,12 @@
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-ec2</artifactId>
-            <version>1.12.113</version>
+            <version>${awsVersion}</version>
         </dependency>
         <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-s3</artifactId>
-            <version>1.12.105</version>
+            <version>${awsVersion}</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.glassfish.jaxb/jaxb-runtime -->
         <dependency>
@@ -53,8 +54,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>
